@@ -3,8 +3,11 @@ package services.impl;
 import DAO.DBHelper;
 import DAO.iml.DBHelperImpl;
 import exceptions.SqlException;
+import models.Check;
 import models.CheckGood;
 import services.CheckGoodServices;
+import services.CheckServices;
+import services.GoodServices;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,6 +53,8 @@ public class CheckGoodServicesImpl implements CheckGoodServices {
 
     @Override
     public List<CheckGood> findAll() {
+        CheckServices checkServices = new CheckServicesImpl();
+        GoodServices goodServices = new GoodServicesImpl();
         List<CheckGood> checkGoodList = new ArrayList<>();
 
         try (PreparedStatement prepStmt = dbHelper.getStmt("SELECT * FROM tb_check_goods ORDER BY id")){
@@ -59,8 +64,8 @@ public class CheckGoodServicesImpl implements CheckGoodServices {
                 try {
                     CheckGood checkGood = new CheckGood();
                     checkGood.setId(resultSet.getLong("id"));
-                    checkGood.setIdCheck(resultSet.getLong("id_tb_checks"));
-                    checkGood.setIdGood(resultSet.getLong("id_tb_goods"));
+                    checkGood.setIdCheck(checkServices.findById(resultSet.getLong("id_tb_checks")));
+                    checkGood.setIdGood(goodServices.findById(resultSet.getLong("id_tb_goods")));
                     checkGood.setCount(resultSet.getInt("count"));
                     checkGood.setActive(resultSet.getBoolean("active"));
 
@@ -79,7 +84,10 @@ public class CheckGoodServicesImpl implements CheckGoodServices {
 
     @Override
     public CheckGood findById(long id) {
+        CheckServices checkServices = new CheckServicesImpl();
+        GoodServices goodServices = new GoodServicesImpl();
         CheckGood checkGood = new CheckGood();
+
         try (PreparedStatement prepStmt = dbHelper.getStmt("SELECT * FROM tb_check_goods WHERE id = ?")){
             prepStmt.setLong(1, id);
 
@@ -87,8 +95,8 @@ public class CheckGoodServicesImpl implements CheckGoodServices {
 
             while (resultSet.next()) {
                 checkGood.setId(resultSet.getLong("id"));
-                checkGood.setIdCheck(resultSet.getLong("id_tb_checks"));
-                checkGood.setIdGood(resultSet.getLong("id_tb_goods"));
+                checkGood.setIdCheck(checkServices.findById(resultSet.getLong("id_tb_checks")));
+                checkGood.setIdGood(goodServices.findById(resultSet.getLong("id_tb_goods")));
                 checkGood.setCount(resultSet.getInt("count"));
                 checkGood.setActive(resultSet.getBoolean("active"));
             }

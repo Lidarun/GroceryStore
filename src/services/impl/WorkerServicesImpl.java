@@ -4,6 +4,7 @@ import DAO.DBHelper;
 import DAO.iml.DBHelperImpl;
 import exceptions.SqlException;
 import models.Worker;
+import services.StoreServices;
 import services.WorkerServices;
 
 import java.sql.PreparedStatement;
@@ -55,6 +56,7 @@ public class WorkerServicesImpl implements WorkerServices {
 
     @Override
     public List<Worker> findAll() {
+        StoreServices storeServices = new StoreServicesImpl();
         List<Worker> workerList = new ArrayList<>();
 
         try (PreparedStatement prepStmt = dbHelper.getStmt("SELECT * FROM tb_workers ORDER BY id")) {
@@ -69,7 +71,7 @@ public class WorkerServicesImpl implements WorkerServices {
                     worker.setPassword(resultSet.getString("password"));
                     worker.setAddDate(resultSet.getString("add_date"));
                     worker.setActive(resultSet.getBoolean("active"));
-                    worker.setIdStore(resultSet.getInt("id_tb_store"));
+                    worker.setIdStore(storeServices.findByID(resultSet.getInt("id_tb_store")));
 
                     workerList.add(worker);
                 }catch (SQLException e){
@@ -84,6 +86,7 @@ public class WorkerServicesImpl implements WorkerServices {
 
     @Override
     public Worker findById(long id) {
+        StoreServices storeServices = new StoreServicesImpl();
         Worker worker = new Worker();
         try (PreparedStatement prepStmt = dbHelper.getStmt("SELECT * FROM tb_workers WHERE id = ?")) {
             prepStmt.setLong(1, id);
@@ -97,8 +100,7 @@ public class WorkerServicesImpl implements WorkerServices {
                 worker.setPassword(resultSet.getString("password"));
                 worker.setAddDate(resultSet.getString("add_date"));
                 worker.setActive(resultSet.getBoolean("active"));
-                worker.setIdStore(resultSet.getInt("id_tb_store"));
-                //worker.setStore(StoreServiceImpl.getById(resultSet.getInt("id_tb_store")))
+                worker.setIdStore(storeServices.findByID(resultSet.getInt("id_tb_store")));
             }
         }catch (SQLException throwables){
             throw new SqlException("Ошибка извлечения данных по id (tb_workers)");

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="JDBS-Driver">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../JDBS-Driver.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

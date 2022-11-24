@@ -1,28 +1,16 @@
 package models;
 
-import DAO.DBHelper;
-import DAO.iml.DBHelperImpl;
 import services.GetNameById;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Worker extends BaseEntity {
     private String login;
     private String password;
-    private long idStore;
-//    private Store idStore;
+//    private long idStore;
+    private Store idStore;
 
     GetNameById getNameById = new GetNameById();
 
     public Worker(){};
-    public Worker(long id, String name, String addDate, boolean active, String login, String password, long idStore) {
-        super(id, name, addDate, active);
-        this.login = login;
-        this.password = password;
-        this.idStore = idStore;
-    }
 
     @Override
     public String toString() {
@@ -30,7 +18,7 @@ public class Worker extends BaseEntity {
                 "| fullName: " + super.getName() +
                 "| login: " + login +
                 "| password: " + password +
-                "| idStore: " + idStore + " ("+getNameById.name(idStore, "tb_store")+")"+
+                "| idStore: " + idStore.getId() + " ("+getNameById.name(idStore.getId(), "tb_store")+")"+
                 "| addDate: " + super.getAddDate() +
                 "| active: " + super.isActive();
     }
@@ -45,8 +33,8 @@ public class Worker extends BaseEntity {
         this.password = password;
     }
 
-    public long getIdStore() {return idStore;}
-    public void setIdStore(long idStore) {
+    public Store getIdStore() {return idStore;}
+    public void setIdStore(Store idStore) {
         this.idStore = idStore;
     }
 }
